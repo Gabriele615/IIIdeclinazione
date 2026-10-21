@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Terza declinazione: traduzione guidata</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #edf1f0;
+    --surface: #ffffff;
+    --field: #f8faf9;
+    --ink: #18272f;
+    --ink-2: #4b5c66;
+    --line: #c5d1d4;
+    --accent: #2447a6;
+    --on-accent: #ffffff;
+    --accent-tint: #e3e9f8;
+    --dict: #1b6a3b;
+    --dict-tint: #e4f0e7;
+    --ring: #2447a6;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12191e;
+      --surface: #1a242b;
+      --field: #141d23;
+      --ink: #e4ebee;
+      --ink-2: #a5b4bc;
+      --line: #34444d;
+      --accent: #9db4f5;
+      --on-accent: #0f1a33;
+      --accent-tint: #243252;
+      --dict: #86d3a4;
+      --dict-tint: #1c2f24;
+      --ring: #9db4f5;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12191e;
+    --surface: #1a242b;
+    --field: #141d23;
+    --ink: #e4ebee;
+    --ink-2: #a5b4bc;
+    --line: #34444d;
+    --accent: #9db4f5;
+    --on-accent: #0f1a33;
+    --accent-tint: #243252;
+    --dict: #86d3a4;
+    --dict-tint: #1c2f24;
+    --ring: #9db4f5;
+    color-scheme: dark;
+  }
+
+  :root {
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  *, *::before, *::after { box-sizing: inherit; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 400 1.0625rem/1.55 "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 30;
+    background: var(--surface);
+  }
+
+  :focus-visible { outline: 3px solid var(--ring); outline-offset: 2px; }
+
+  [hidden] { display: none !important; }
+
+  /* Barra superiore */
+  .bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  .bar-in {
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 0.7rem 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+  h1 {
+    margin: 0;
+    font: 700 1.5rem/1.2 "Gentium Book Plus", Georgia, "Times New Roman", serif;
+  }
+  .tools { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tool {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0.55rem 1.1rem;
+    border: 2px solid var(--accent);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--accent);
+    font: 700 1rem/1.2 "Atkinson Hyperlegible", system-ui, sans-serif;
+    cursor: pointer;
+  }
+  .tool[aria-expanded="true"] { background: var(--accent); color: var(--on-accent); }
+  .tool svg { flex: none; }
+
+  /* Struttura */
+  .app {
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 1.75rem 1.25rem 4rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+  main { width: 100%; max-width: 46rem; }
+  .app:not(.has-panel) main { margin-inline: auto; }
+  @media (min-width: 60rem) {
+    .app.has-panel { grid-template-columns: minmax(0, 1fr) 26rem; }
+  }
+
+  .lead { margin: 0 0 1.25rem; font-size: 1.1875rem; max-width: 40rem; }
+
+  .metodo {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0.9rem 1rem;
+    border-left: 4px solid var(--accent);
+    background: var(--accent-tint);
+    border-radius: 0 8px 8px 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.35rem 1.25rem;
+    counter-reset: m;
+    font-size: 0.975rem;
+  }
+  .metodo li { counter-increment: m; display: flex; gap: 0.5rem; }
+  .metodo li::before { content: counter(m) "."; font-weight: 700; color: var(--accent); min-width: 1.1rem; }
+
+  /* Frasi */
+  .frasi { list-style: none; margin: 1.75rem 0 0; padding: 0; counter-reset: f; }
+  .frase {
+    counter-increment: f;
+    display: grid;
+    grid-template-columns: 2.4rem minmax(0, 1fr);
+    column-gap: 0.5rem;
+    padding: 1.75rem 0 2rem;
+    border-top: 1px solid var(--line);
+  }
+  .frase::before {
+    content: counter(f);
+    grid-row: 1 / span 3;
+    font: 700 1.75rem/1.2 "Gentium Book Plus", Georgia, serif;
+    color: var(--accent);
+  }
+  .latino {
+    margin: 0 0 1rem;
+    font: 400 clamp(1.7rem, 4.6vw, 2.4rem)/1.25 "Gentium Book Plus", Georgia, "Times New Roman", serif;
+  }
+  .frase label { display: block; margin-bottom: 0.4rem; font-weight: 700; font-size: 0.975rem; color: var(--ink-2); }
+  .frase textarea {
+    display: block;
+    width: 100%;
+    min-height: 13rem;
+    padding: 0.85rem 1rem;
+    border: 2px solid var(--line);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink);
+    font: 400 1.0625rem/1.65 "Atkinson Hyperlegible", system-ui, sans-serif;
+    resize: vertical;
+  }
+  .frase textarea::placeholder { color: var(--ink-2); opacity: 0.85; }
+  .frase textarea:focus { border-color: var(--ring); outline: none; box-shadow: 0 0 0 3px var(--accent-tint); }
+
+  /* Pannello laterale */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 1.25rem 1.25rem 1.5rem;
+  }
+  @media (min-width: 60rem) {
+    .panel {
+      position: sticky;
+      top: calc(var(--bar-h, 4.5rem) + env(safe-area-inset-top, 0px) + 1rem);
+      align-self: start;
+      max-height: calc(100vh - var(--bar-h, 4.5rem) - 2.5rem);
+      overflow: auto;
+    }
+  }
+  @media (max-width: 59.999rem) {
+    .panel {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      max-height: 70vh;
+      overflow: auto;
+      border-radius: 18px 18px 0 0;
+      border-bottom: 0;
+      padding-bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+      box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.18);
+      animation: sale 0.2s ease-out;
+    }
+    .app.has-panel { padding-bottom: 72vh; }
+  }
+  @keyframes sale { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) { .panel { animation: none !important; } }
+
+  .panel-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
+  .panel-head h2 { margin: 0; font: 700 1.375rem/1.2 "Gentium Book Plus", Georgia, serif; }
+  .chiudi {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    border: 0;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ink-2);
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .chiudi:hover { background: var(--bg); color: var(--ink); }
+
+  /* Dizionario */
+  .cerca label { display: block; font-weight: 700; margin-bottom: 0.4rem; }
+  .cerca input {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 2px solid var(--line);
+    border-radius: 8px;
+    background: var(--field);
+    color: var(--ink);
+    font: 400 1.4rem/1.3 "Gentium Book Plus", Georgia, serif;
+  }
+  .cerca input:focus { border-color: var(--ring); outline: none; box-shadow: 0 0 0 3px var(--accent-tint); }
+  .nota { margin: 0.65rem 0 0; color: var(--ink-2); font-size: 0.95rem; }
+
+  .esito { margin-top: 1.25rem; min-height: 1.5rem; }
+  .vuoto { margin: 0; color: var(--ink-2); font-size: 0.95rem; }
+  .voce {
+    padding: 1rem 1.1rem 1.1rem;
+    border-left: 4px solid var(--dict);
+    background: var(--dict-tint);
+    border-radius: 0 8px 8px 0;
+  }
+  .voce .testa { margin: 0; font: 700 2.5rem/1.1 "Gentium Book Plus", Georgia, serif; color: var(--dict); }
+  .voce .da, .voce .tipo {
+    margin: 0.35rem 0 0;
+    font: italic 400 1.1rem/1.4 "Gentium Book Plus", Georgia, serif;
+    color: var(--dict);
+  }
+  .voce .tipo { margin-top: 0.1rem; }
+  .voce .sig { margin: 0.8rem 0 0; font-size: 1.3rem; }
+
+  /* Desinenze */
+  .scroll-x { overflow-x: auto; }
+  .desinenze { width: 100%; border-collapse: collapse; text-align: center; }
+  .desinenze th, .desinenze td { padding: 0.45rem 0.3rem; border: 1px solid var(--line); }
+  .desinenze thead th { background: var(--accent-tint); font: 700 0.875rem/1.25 "Atkinson Hyperlegible", system-ui, sans-serif; }
+  .desinenze tbody th { background: var(--field); font: 700 0.95rem "Atkinson Hyperlegible", system-ui, sans-serif; text-align: left; padding-inline: 0.5rem; white-space: nowrap; }
+  .desinenze td { font: italic 700 1.15rem/1.3 "Gentium Book Plus", Georgia, serif; white-space: nowrap; }
+  .desinenze td.zero { font: 400 0.95rem "Atkinson Hyperlegible", system-ui, sans-serif; color: var(--ink-2); }
+  .desinenze td .o { font: 400 0.95rem "Atkinson Hyperlegible", system-ui, sans-serif; color: var(--ink-2); }
+  .note-tab { margin: 1rem 0 0; padding: 0; list-style: none; font-size: 0.975rem; color: var(--ink-2); }
+  .note-tab li + li { margin-top: 0.45rem; }
+</style>
+</head>
+<body>
+
+<header class="bar" id="bar">
+  <div class="bar-in">
+    <h1>Terza declinazione</h1>
+    <div class="tools">
+      <button type="button" class="tool" id="btn-diz" aria-expanded="false" aria-controls="panel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 5.5v16"/><path d="M9 8h7"/></svg>
+        Dizionario
+      </button>
+      <button type="button" class="tool" id="btn-des" aria-expanded="false" aria-controls="panel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg>
+        Desinenze
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="app" id="app">
+  <main>
+    <p class="lead">Traduci le frasi. Per ogni parola cerca nel dizionario il nominativo, poi scrivi nella casella l’analisi e la traduzione.</p>
+
+    <ol class="metodo" aria-label="Il metodo">
+      <li>Forma che trovo</li>
+      <li>Tolgo la desinenza</li>
+      <li>Ritrovo il tema</li>
+      <li>Cerco sul dizionario</li>
+      <li>Leggo il significato</li>
+      <li>Traduco la forma iniziale</li>
+    </ol>
+
+    <ol class="frasi">
+      <li class="frase">
+        <p class="latino" lang="la">Rex a ducibus laudabatur.</p>
+        <label for="t1">Analisi parola per parola e traduzione</label>
+        <textarea id="t1" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Civitas a rege regebatur.</p>
+        <label for="t2">Analisi parola per parola e traduzione</label>
+        <textarea id="t2" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Pax lege servabitur.</p>
+        <label for="t3">Analisi parola per parola e traduzione</label>
+        <textarea id="t3" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Parietes tempestate delebantur.</p>
+        <label for="t4">Analisi parola per parola e traduzione</label>
+        <textarea id="t4" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Custos gregem voce vocat.</p>
+        <label for="t5">Analisi parola per parola e traduzione</label>
+        <textarea id="t5" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Rex potestatem ducibus concedit.</p>
+        <label for="t6">Analisi parola per parola e traduzione</label>
+        <textarea id="t6" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+      <li class="frase">
+        <p class="latino" lang="la">Lux noctem illuminat.</p>
+        <label for="t7">Analisi parola per parola e traduzione</label>
+        <textarea id="t7" spellcheck="false" autocomplete="off" placeholder="Scrivi qui l’analisi di ogni parola (forma, caso e numero, nominativo, funzione) e poi la traduzione."></textarea>
+      </li>
+    </ol>
+  </main>
+
+  <aside class="panel" id="panel" hidden>
+    <section id="sez-diz" hidden aria-labelledby="h-diz">
+      <div class="panel-head">
+        <h2 id="h-diz">Dizionario</h2>
+        <button type="button" class="chiudi" data-chiudi aria-label="Chiudi il pannello">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="cerca">
+        <label for="cerca">Scrivi il nominativo della parola</label>
+        <input id="cerca" type="text" inputmode="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="nota-diz">
+        <p class="nota" id="nota-diz">Scrivila esattamente come sta sul dizionario: il nominativo singolare per i nomi, la prima persona singolare del presente per i verbi. Le preposizioni si cercano come le trovi. Se la forma non è esatta, la voce non compare.</p>
+      </div>
+      <div class="esito" id="esito" aria-live="polite"></div>
+    </section>
+
+    <section id="sez-des" hidden aria-labelledby="h-des">
+      <div class="panel-head">
+        <h2 id="h-des">Desinenze della terza declinazione</h2>
+        <button type="button" class="chiudi" data-chiudi aria-label="Chiudi il pannello">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="scroll-x">
+        <table class="desinenze">
+          <thead>
+            <tr>
+              <th scope="col" rowspan="2"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Caso</span></th>
+              <th scope="colgroup" colspan="2">Singolare</th>
+              <th scope="colgroup" colspan="2">Plurale</th>
+            </tr>
+            <tr>
+              <th scope="col">masch. / femm.</th>
+              <th scope="col">neutro</th>
+              <th scope="col">masch. / femm.</th>
+              <th scope="col">neutro</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">nom.</th>
+              <td>-s <span class="o">/ zero</span></td><td class="zero">zero</td><td>-ēs</td><td>-ă</td>
+            </tr>
+            <tr>
+              <th scope="row">gen.</th>
+              <td>-ĭs</td><td>-ĭs</td><td>-ŭm</td><td>-ŭm</td>
+            </tr>
+            <tr>
+              <th scope="row">dat.</th>
+              <td>-ī</td><td>-ī</td><td>-(ĭ)bŭs</td><td>-(ĭ)bŭs</td>
+            </tr>
+            <tr>
+              <th scope="row">acc.</th>
+              <td>-ĕm</td><td class="zero">zero</td><td>-ēs</td><td>-ă</td>
+            </tr>
+            <tr>
+              <th scope="row">voc.</th>
+              <td>-s <span class="o">/ zero</span></td><td class="zero">zero</td><td>-ēs</td><td>-ă</td>
+            </tr>
+            <tr>
+              <th scope="row">abl.</th>
+              <td>-ĕ <span class="o">/</span> -ī</td><td>-ĕ <span class="o">/</span> -ī</td><td>-(ĭ)bŭs</td><td>-(ĭ)bŭs</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ul class="note-tab">
+        <li>Il tema si ottiene togliendo -ĭs dal genitivo singolare.</li>
+        <li>Zero significa che al tema non si aggiunge nessuna desinenza.</li>
+      </ul>
+    </section>
+  </aside>
+</div>
+
+<script>
+  // Voci del dizionario: ogni parola delle frasi ha il suo significato.
+  // chiavi = forme che lo studente può scrivere (senza segni di lunghezza, in minuscolo).
+  var VOCI = [
+    { chiavi: ["lux"],       testa: "lux",       da: "lux-lucis",              tipo: "sostantivo femminile della III declinazione", sig: "luce" },
+    { chiavi: ["nox"],       testa: "nox",       da: "nox-noctis",             tipo: "sostantivo femminile della III declinazione", sig: "notte" },
+    { chiavi: ["rex"],       testa: "rex",       da: "rex-regis",              tipo: "sostantivo maschile della III declinazione",  sig: "re" },
+    { chiavi: ["dux"],       testa: "dux",       da: "dux-ducis",              tipo: "sostantivo maschile della III declinazione",  sig: "comandante" },
+    { chiavi: ["pax"],       testa: "pax",       da: "pax-pacis",              tipo: "sostantivo femminile della III declinazione", sig: "pace" },
+    { chiavi: ["lex"],       testa: "lex",       da: "lex-legis",              tipo: "sostantivo femminile della III declinazione", sig: "legge" },
+    { chiavi: ["custos"],    testa: "custos",    da: "custos-custodis",        tipo: "sostantivo maschile della III declinazione",  sig: "custode" },
+    { chiavi: ["grex"],      testa: "grex",      da: "grex-gregis",            tipo: "sostantivo maschile della III declinazione",  sig: "gregge" },
+    { chiavi: ["vox"],       testa: "vox",       da: "vox-vocis",              tipo: "sostantivo femminile della III declinazione", sig: "voce" },
+    { chiavi: ["civitas"],   testa: "civitas",   da: "civitas-civitatis",      tipo: "sostantivo femminile della III declinazione", sig: "città" },
+    { chiavi: ["paries"],    testa: "paries",    da: "paries-parietis",        tipo: "sostantivo maschile della III declinazione",  sig: "parete" },
+    { chiavi: ["tempestas"], testa: "tempestas", da: "tempestas-tempestatis",  tipo: "sostantivo femminile della III declinazione", sig: "tempesta" },
+    { chiavi: ["potestas"],  testa: "potestas",  da: "potestas-potestatis",    tipo: "sostantivo femminile della III declinazione", sig: "potere" },
+
+    { chiavi: ["laudo"],     testa: "laudo",     da: "laudo-laudare",          tipo: "verbo della I coniugazione",   sig: "lodare" },
+    { chiavi: ["servo"],     testa: "servo",     da: "servo-servare",          tipo: "verbo della I coniugazione",   sig: "custodire" },
+    { chiavi: ["voco"],      testa: "voco",      da: "voco-vocare",            tipo: "verbo della I coniugazione",   sig: "chiamare" },
+    { chiavi: ["illumino"],  testa: "illumino",  da: "illumino-illuminare",    tipo: "verbo della I coniugazione",   sig: "illuminare" },
+    { chiavi: ["deleo"],     testa: "deleo",     da: "deleo-delere",           tipo: "verbo della II coniugazione",  sig: "distruggere" },
+    { chiavi: ["rego"],      testa: "rego",      da: "rego-regere",            tipo: "verbo della III coniugazione", sig: "governare" },
+    { chiavi: ["concedo"],   testa: "concedo",   da: "concedo-concedere",      tipo: "verbo della III coniugazione", sig: "concedere" },
+
+    { chiavi: ["a", "ab"],   testa: "a, ab",     da: "",                       tipo: "preposizione che regge l’ablativo", sig: "da" }
+  ];
+
+  function normalizza(s) {
+    return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim().replace(/\s+/g, " ");
+  }
+
+  var INDICE = {};
+  VOCI.forEach(function (v) { v.chiavi.forEach(function (k) { INDICE[k] = v; }); });
+
+  var campo = document.getElementById("cerca");
+  var esito = document.getElementById("esito");
+
+  function riga(tag, classe, testo, lang) {
+    var el = document.createElement(tag);
+    el.className = classe;
+    el.textContent = testo;
+    if (lang) el.lang = lang;
+    return el;
+  }
+
+  function cerca() {
+    var q = normalizza(campo.value);
+    esito.textContent = "";
+    if (!q) return;
+    var v = Object.prototype.hasOwnProperty.call(INDICE, q) ? INDICE[q] : null;
+    if (!v) {
+      esito.appendChild(riga("p", "vuoto", "Nessuna voce con questa forma."));
+      return;
+    }
+    var box = document.createElement("article");
+    box.className = "voce";
+    box.appendChild(riga("h3", "testa", v.testa, "la"));
+    if (v.da) box.appendChild(riga("p", "da", "da " + v.da, "la"));
+    box.appendChild(riga("p", "tipo", v.tipo));
+    box.appendChild(riga("p", "sig", "«" + v.sig + "»"));
+    esito.appendChild(box);
+  }
+  campo.addEventListener("input", cerca);
+
+  // Pannello: dizionario / desinenze
+  var app = document.getElementById("app");
+  var pannello = document.getElementById("panel");
+  var sezioni = { diz: document.getElementById("sez-diz"), des: document.getElementById("sez-des") };
+  var bottoni = { diz: document.getElementById("btn-diz"), des: document.getElementById("btn-des") };
+  var aperto = null;
+
+  function mostra(nome) {
+    aperto = nome;
+    pannello.hidden = false;
+    app.classList.add("has-panel");
+    Object.keys(sezioni).forEach(function (k) {
+      sezioni[k].hidden = (k !== nome);
+      bottoni[k].setAttribute("aria-expanded", k === nome ? "true" : "false");
+    });
+    if (nome === "diz") { campo.focus({ preventScroll: true }); }
+  }
+
+  function chiudi(riportaFuoco) {
+    var prima = aperto;
+    aperto = null;
+    pannello.hidden = true;
+    app.classList.remove("has-panel");
+    Object.keys(sezioni).forEach(function (k) {
+      sezioni[k].hidden = true;
+      bottoni[k].setAttribute("aria-expanded", "false");
+    });
+    if (riportaFuoco && prima) bottoni[prima].focus();
+  }
+
+  Object.keys(bottoni).forEach(function (k) {
+    bottoni[k].addEventListener("click", function () {
+      if (aperto === k) { chiudi(false); } else { mostra(k); }
+    });
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-chiudi]"), function (b) {
+    b.addEventListener("click", function () { chiudi(true); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && aperto) chiudi(true);
+  });
+
+  // Altezza della barra, per il pannello fisso su schermi larghi
+  var barra = document.getElementById("bar");
+  function misuraBarra() { document.documentElement.style.setProperty("--bar-h", barra.offsetHeight + "px"); }
+  misuraBarra();
+  window.addEventListener("resize", misuraBarra);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(misuraBarra);
+</script>
+</body>
+</html>
